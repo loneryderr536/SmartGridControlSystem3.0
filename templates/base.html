@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smart Grid Control System{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary: #6c5ce7;
+            --dark: #000000;
+            --light: #ffffff;
+            --accent: #574ABB;
+            --success: #00b894;
+            --warning: #fdcb6e;
+        }
+
+        body {
+            background: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--primary);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container-text-center .row-row-cols-4{
+            color-scheme: light dark;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo h1 {
+            color: var(--light);
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .logo span {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+       
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>SMART GRID <span>CONTROL SYSTEM</span></h1>
+            </div>
+            <div class="container-text-center">
+                <div class="row-row-cols-4">
+                  <button><a href="templates/index.html">Home</a></button>
+                  <button><a href="#">About</a></button>
+                  <button><a href="#">Contact</a></button>
+                  
+                </div>
+            </div>
+            {% block header_content %}{% endblock %}
+            
+        </div>
+       
+          
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

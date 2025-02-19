@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Demand Response - Smart Grid Control System{% endblock %}
+
+{% block header_content %}
+<a href="/" class="back-button" style="color: var(--light); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 0.3rem; background: var(--accent);">
+    ← Back to Dashboard
+</a>
+{% endblock %}
+
+{% block content %}
+<style>
+    .response-container {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .input-panel {
+        background: var(--primary);
+        padding: 2rem;
+        border-radius: 1rem;
+        height: fit-content;
+    }
+
+    .input-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .input-group label {
+        display: block;
+        color: var(--light);
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .input-group input,
+    .input-group select {
+        width: 100%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 0.3rem;
+        background: var(--accent);
+        color: var(--light);
+        font-size: 1rem;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+        outline: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    button {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 0.3rem;
+        background: var(--dark);
+        color: var(--light);
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.3s;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    .results-panel {
+        background: var(--accent);
+        padding: 2rem;
+        border-radius: 1rem;
+        color: var(--light);
+    }
+
+    .forecast-value{
+        font-size: 4rem;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+
+    @media (max-width: 968px) {
+        .response-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="response-container">
+    <form method="POST" action="http://127.0.0.1:5000/demand-response-page">
+        <div class="input-group">
+            <label>Date</label>
+            <input type="date" name="date" required min="{{ current_date }}"
+                   value="{{ request.form.get('date', '') }}">
+        </div>
+        
+        <div class="input-group">
+            <label>Location</label>
+            <select name="city" required>
+                <option value="">Select a city</option>
+                <option value="Madrid">Madrid</option>
+                <option value="Seville">Seville</option>
+                <option value="Barcelona">Barcelona</option>
+                <option value="Valencia">Valencia</option>
+                <option value="Bilbao">Bilbao</option>
+                {% for city in available_cities %}
+                    <option value="{{ city }}" 
+                            {% if city == request.form.get('city', '').lower() %}selected{% endif %}>
+                        {{ city|title }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Demand Response Strategy</label>
+            <select name="strategy" required>
+                <option value="peak_reduction">Peak Reduction</option>
+                <option value="time_of_use">Time of Use Pricing</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Reduction Percentage (%)</label>
+            <input type="number" name="reduction" min="1" max="50" required 
+                   value="{{ request.form.get('reduction', '20') }}">
+        </div>
+
+        <button type="submit">Apply Demand Response</button>
+    </form>
+
+    <div class="results-panel">
+        <h2>Adjusted Forecast {% if city %}for {{ city }}{% endif %}</h2>
+        
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+    
+        {% if prediction %}
+            <div class="forecast-card">
+                <h3>Original Load</h3>
+                <div class="forecast-value">{{ prediction[1] }} MWh</div>
+                <h3>Adjusted Load</h3>
+                <div class="forecast-value">{{ prediction[2] }} MWh</div>
+            </div>
+        {% elif not error %}
+        <div style="text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.7);">
+            Enter a date and location to apply Demand Response
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fault Detection - Smart Grid</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary: #6c5ce7;
+            --dark: #2d3436;
+            --light: #ffffff;
+            --accent: #574ABB;
+            --danger: #e74c3c;
+            --success: #00b894;
+            --warning: #fdcb6e;
+        }
+
+        body {
+            background: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--primary);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: var(--light);
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .back-button {
+            color: var(--light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.3rem;
+            background: var(--accent);
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .grid-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-card {
+            background: var(--accent);
+            padding: 1.5rem;
+            border-radius: 0.8rem;
+            color: var(--light);
+        }
+
+        .status-card.warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .status-card.danger {
+            background: var(--danger);
+        }
+
+        .status-card.success {
+            background: var(--success);
+        }
+
+        .detection-panel {
+            background: var(--primary);
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-top: 2rem;
+        }
+
+        .panel-header {
+            color: var(--light);
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alerts-list {
+                background: var(accent);}
+    </style>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>CONTROL SYSTEM</h1>
+            </div>
+            <a href="/" class="back-button">← Back to Dashboard</a>
+        </div>
+    
+    </header>
+    

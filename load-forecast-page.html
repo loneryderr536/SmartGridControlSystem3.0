@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Forecasting - Smart Grid</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary: #6c5ce7;
+            --dark: #2d3436;
+            --light: #ffffff;
+            --accent: #574ABB;
+        }
+
+        body {
+            background: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--primary);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: var(--light);
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .logo span {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .back-button {
+            color: var(--light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.3rem;
+            background: var(--accent);
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .forecast-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .input-panel {
+            background: var(--primary);
+            padding: 2rem;
+            border-radius: 1rem;
+            height: fit-content;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--light);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 0.3rem;
+            background: var(--accent);
+            color: var(--light);
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.3rem;
+            background: var(--dark);
+            color: var(--light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .results-panel {
+            background: var(--accent);
+            padding: 2rem;
+            border-radius: 1rem;
+            color: var(--light);
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 968px) {
+            .forecast-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>LOAD FORECASTING</h1>
+            </div>
+            <a href="/" class="back-button">← Back to Dashboard</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="forecast-container">
+            <div class="input-panel">
+                <div class="input-group">
+                    <label>Date</label>
+                    <input type="date" name="start-date">
+                </div>
+                
+                <div class="input-group">
+                    <label>Location</label>
+                    <select>
+                        <option>Valencia</option>
+                        <option>Barcelona</option>
+                        <option>Seville</option>
+                        <option>Madrid</option>
+                        <option>Bilbao</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Generate Forecast</button>
+            </div>
+
+            <div class="results-panel">
+                <h2>Forecast Results</h2>
+                <div class="chart-placeholder">Load Forecast Chart </div>
+                <div class="chart-placeholder">Consumption Patterns</div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
