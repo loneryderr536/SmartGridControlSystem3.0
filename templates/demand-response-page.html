@@ -74,10 +74,18 @@
         color: var(--light);
     }
 
-    .forecast-value{
+    .forecast-value {
         font-size: 4rem;
         font-weight: 600;
         margin-top: 1rem;
+    }
+
+    .error-message {
+        background: #ff6b6b;
+        color: var(--light);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
     }
 
     @media (max-width: 968px) {
@@ -88,7 +96,7 @@
 </style>
 
 <div class="response-container">
-    <form method="POST" action="http://127.0.0.1:5000/demand-response-page">
+    <form method="POST" action="/demand-response-page">
         <div class="input-group">
             <label>Date</label>
             <input type="date" name="date" required min="{{ current_date }}"
@@ -104,12 +112,14 @@
                 <option value="Barcelona">Barcelona</option>
                 <option value="Valencia">Valencia</option>
                 <option value="Bilbao">Bilbao</option>
-                {% for city in available_cities %}
-                    <option value="{{ city }}" 
-                            {% if city == request.form.get('city', '').lower() %}selected{% endif %}>
-                        {{ city|title }}
-                    </option>
-                {% endfor %}
+                {% if available_cities is defined %}
+                    {% for city in available_cities %}
+                        <option value="{{ city }}" 
+                                {% if city == request.form.get('city', '').lower() %}selected{% endif %}>
+                            {{ city|title }}
+                        </option>
+                    {% endfor %}
+                {% endif %}
             </select>
         </div>
 
@@ -134,23 +144,54 @@
         <h2>Adjusted Forecast {% if city %}for {{ city }}{% endif %}</h2>
         
         {% if error %}
-        <div class="error-message">
-            {{ error }}
-        </div>
+            <div class="error-message">
+                {{ error }}
+            </div>
         {% endif %}
     
         {% if prediction %}
             <div class="forecast-card">
-                <h3>Original Load</h3>
+                <h3>Original Forecast</h3>
+                <p>Date: {{ prediction[0] }}</p>
                 <div class="forecast-value">{{ prediction[1] }} MWh</div>
-                <h3>Adjusted Load</h3>
-                <div class="forecast-value">{{ prediction[2] }} MWh</div>
+                <h4>Price: {{ prediction[2] }} €/MWh</h4>
+                <hr>
+                <h3>After Demand Response</h3>
+                <div class="forecast-value">{{ prediction[3] }} MWh</div>
+                <h4>Price: {{ prediction[4] }} €/MWh</h4>
             </div>
         {% elif not error %}
-        <div style="text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.7);">
-            Enter a date and location to apply Demand Response
-        </div>
+            <div style="text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.7);">
+                Enter a date and location to apply Demand Response
+            </div>
         {% endif %}
     </div>
+    
 </div>
+    {% if time_periods_data %}
+    <div class="forecast-card" style="margin-top: 2rem;">
+        <h3>Time-of-Use Summary</h3>
+        <table>
+        <thead>
+            <tr>
+            <th>Time Period</th>
+            <th>Generated Load (MW)</th>
+            <th>Adjusted Load (MW)</th>
+            <th>Predicted Price (€/MWh)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in time_periods_data %}
+            <tr>
+                <td>{{ row.Time_Period }}</td>
+                <td>{{ row.Generated_Load|round(2) }}</td>
+                <td>{{ row.Adjusted_Load|round(2) }}</td>
+                <td>{{ row.Predicted_Price|round(2) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+    {% endif %}
+
 {% endblock %}

@@ -125,10 +125,12 @@
 <div class="forecast-container">
     <!-- Change the form action to point to /load-forecast -->
     <form method="POST" action="/load-forecast-page">
+     
         <div class="input-group">
             <label>Date</label>
-            <input type="date" name="date" required min="{{ current_date }}"
-                   value="{{ request.form.get('date', '') }}">
+                <input type="date" name="date" {% if request.form.get('predict_past') %}checked{% endif %}>
+                Predict past load?
+            </label>
         </div>
         
         <div class="input-group">
@@ -155,16 +157,15 @@
         {% endif %}
     
         {% if prediction %}
-            <div class="forecast-card">
-                <h3>Predicted Load</h3>
-                <div class="forecast-value">{{ prediction[1] }} MWh</div>
-                <div class="forecast-date">{{ prediction[0] }}</div>
-            </div>
-        {% elif not error %}
-            <div style="text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.7);">
-                Enter a date and location to generate forecast
-            </div>
-        {% endif %}
+    <div class="forecast-card">
+        <h3>Predicted Load</h3>
+        <div class="forecast-value">{{ prediction[1] }} MWh</div>
+        <div class="forecast-date">{{ prediction[0] }}</div>
     </div>
-</div>
+{% elif not error %}
+    <div style="text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.7);">
+        Enter a date and location to generate forecast
+    </div>
+{% endif %}
+
 {% endblock %}

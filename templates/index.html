@@ -201,5 +201,23 @@
             </a>
         </div>
     </main>
+
+    <script>
+        let data = {
+  "date" : "12-01-2005",
+  "city" : "Kochi"
+}
+    fetch('http://localhost:5000/api/load-forecast', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    </script>
 </body>
 </html>
