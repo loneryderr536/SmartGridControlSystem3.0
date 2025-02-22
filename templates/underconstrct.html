@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Load Forecasting - Smart Grid Control System{% endblock %}
+
+{% block header_content %}
+<a href="/" class="back-button" style="color: var(--light); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 0.3rem; background: var(--accent);">
+    ← Back to Dashboard
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="under-construction-page">
+  <div class="container">
+    <div class="construction"></div>
+    <h1>Under Construction</h1>
+    <p>We are working hard to bring you a great experience. Please check back soon!</p>
+  </div>
+</div>
+
+<style>
+.under-construction-page {
+  margin: 0;
+  padding: 0;
+  background: #130f40;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  color: #ffffff;
+}
+
+.under-construction-page .container {
+  text-align: center;
+}
+
+.under-construction-page h1 {
+  font-size: 3em;
+  margin-bottom: 0.5em;
+}
+
+.under-construction-page p {
+  font-size: 1.2em;
+  margin-bottom: 1em;
+}
+
+.under-construction-page .construction {
+  
+  margin: 0 auto;
+  background: url('https://i.imgur.com/4Y4KJex.png') no-repeat center center;
+  background-size: contain;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}

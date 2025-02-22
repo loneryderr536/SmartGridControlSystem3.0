@@ -45,6 +45,12 @@ app = Flask(__name__)
 # Load trained Bi-LSTM model
 model = tf.keras.models.load_model("bi_lstm_model.keras")
 
+# Load Fault Detection Model and Scaler 
+fault_model = joblib.load("rf_fault_detection_model.pkl")
+# If your fault detection model was trained on scaled data, load its scaler.
+fault_scaler = joblib.load("fault_scaler.pkl")
+
+
 # (The following scaler saving/loading code is optional depending on your training workflow)
 X_train = np.random.rand(100, 13)
 scaler = MinMaxScaler()
@@ -110,6 +116,8 @@ def load_forecast():
             prediction = (date, predicted_load)
         except Exception as e:
             error = str(e)
+            
+    
     return render_template("load-forecast-page.html", 
                            prediction=prediction,
                            error=error,
@@ -140,17 +148,81 @@ def demand_response_page():
         reduction_percent = int(request.form["reduction"])
         predicted_load = predict_load(date, city)
         adjusted_load = apply_demand_response(predicted_load, strategy, reduction_percent)
-        # Calculate prices: wrap the scalar load in a list so that the function returns an array,
-        # then extract the first element.
         predicted_price = calculate_price([predicted_load])[0]
         adjusted_price = calculate_price([adjusted_load])[0]
-        # Pass all values to the template. You can use a tuple or dictionary.
         prediction = (date, predicted_load, predicted_price, adjusted_load, adjusted_price)
+        
+        # Generate time-of-use data (example using a 24-hour forecast)
+        predicted_date = pd.to_datetime(date)
+        time_index = pd.date_range(start=predicted_date, periods=24, freq='H')
+        generated_load_array = np.full(24, predicted_load)
+        adjusted_load_array  = np.full(24, adjusted_load)
+        predicted_price_array = np.full(24, predicted_price)
+        
+        df = pd.DataFrame({
+            'Time': time_index,
+            'Generated_Load': generated_load_array,
+            'Adjusted_Load': adjusted_load_array,
+            'Predicted_Price': predicted_price_array
+        })
+        
+        df['Time_Period'] = pd.cut(
+            df['Time'].dt.hour,
+            bins=[-1, 11, 17, 24],
+            labels=['Morning', 'Afternoon', 'Night'],
+            right=False
+        )
+        
+        averages = df.groupby('Time_Period')[['Generated_Load', 'Adjusted_Load', 'Predicted_Price']].mean().reset_index()
+        time_periods_data = averages.to_dict(orient='records')
+        
         return render_template("demand-response-page.html", 
                                city=city, 
-                               prediction=prediction)
+                               prediction=prediction,
+                               time_periods_data=time_periods_data)
     else:
-        return render_template("demand-response-page.html")
+        # Pass an empty list so that the template can handle it gracefully
+        return render_template("demand-response-page.html", time_periods_data=[])
+
+#  Fault Detection Prediction Function ---
+def predict_fault(Ia, Ib, Ic, Va, Vb, Vc):
+    """
+    Predicts whether a fault is present based on electrical measurements.
+    Parameters:
+        Ia, Ib, Ic, Va, Vb, Vc: float values representing the currents and voltages.
+    Returns:
+        A string: "Fault" if a fault is detected, "No Fault" otherwise.
+    """
+    # Prepare the input array for prediction
+    features = np.array([[Ia, Ib, Ic, Va, Vb, Vc]])
+    # Scale features using the fault detection scaler (if used during training)
+    features_scaled = fault_scaler.transform(features)
+    prediction = fault_model.predict(features_scaled)
+    return "Fault" if prediction[0] == 1 else "No Fault"
+
+# --- Fault Detection API Endpoint ---
+@app.route("/fault-detection-page", methods=["GET", "POST"])
+def fault_detection():
+    return render_template('underconstrct.html')
+    """
+    API endpoint for fault detection.
+    Expects a JSON payload with keys: 'Ia', 'Ib', 'Ic', 'Va', 'Vb', 'Vc'.
+    Returns a JSON with the fault status.
+    """
+    try:
+        data = request.get_json(force=True)
+        Ia = float(data.get("Ia"))
+        Ib = float(data.get("Ib"))
+        Ic = float(data.get("Ic"))
+        Va = float(data.get("Va"))
+        Vb = float(data.get("Vb"))
+        Vc = float(data.get("Vc"))
+        fault_status = predict_fault(Ia, Ib, Ic, Va, Vb, Vc)
+        return jsonify({"fault_status": fault_status})
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
