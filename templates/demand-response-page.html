@@ -96,7 +96,11 @@
         margin-bottom: 1rem;
     }
   
-
+    th, td {
+    padding: 12px 16px;  /* ✅ Adds space inside cells */
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
     @media (max-width: 968px) {
         .response-container {
             grid-template-columns: 1fr;
@@ -178,10 +182,9 @@
     
 </div>
 <div class="results-panel2">
-    <h3>Time-of-Use Summary</h3>
+    <h3>Summary</h3>
     {% if time_periods_data %}
-    <div class="forecast-card" >
-        
+    <div class="forecast-card">
         <table>
         <thead>
             <tr>
@@ -194,16 +197,27 @@
         <tbody>
             {% for row in time_periods_data %}
             <tr>
-                <td>{{ row.Time_Period }}</td>
-                <td>{{ row.Generated_Load|round(2) }}</td>
-                <td>{{ row.Adjusted_Load|round(2) }}</td>
-                <td>{{ row.Predicted_Price|round(2) }}</td>
+                <td>{{ row['Time_Period'] }}</td>  <!-- ✅ FIX: Ensure correct dictionary key reference -->
+                <td>{{ row['Generated_Load'] | round(2) }}</td>
+                <td>{{ row['Adjusted_Load'] | round(2) }}</td>
+                <td>{{ row['Predicted_Price'] | round(2) }}</td>
             </tr>
             {% endfor %}
         </tbody>
         </table>
     </div>
+    {% else %}
+        <p style="text-align: center; padding: 1rem; color: rgba(255, 255, 255, 0.7);">
+            No time period data available. Submit a request above.
+        </p>
     {% endif %}
+</div>
+{% if graph_url %}
+    <div class="graph-container">
+        <h3>Demand Response Adjustment Over Time</h3>
+        <img src="data:image/png;base64,{{ graph_url }}" alt="Demand Response Graph" class="responsive-graph">
+    </div>
+{% endif %}
+
 
 {% endblock %}
-</div>

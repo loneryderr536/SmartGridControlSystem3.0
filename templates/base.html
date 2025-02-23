@@ -42,13 +42,6 @@
             justify-content: space-between;
             align-items: center;
         }
-        .container-text-center .row-row-cols-4{
-            color-scheme: light dark;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1.5rem;
-        }
 
         .logo h1 {
             color: var(--light);
@@ -60,6 +53,13 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
+        .container-text-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
         main {
             flex: 1;
             padding: 2rem;
@@ -68,7 +68,13 @@
             width: 100%;
         }
 
-       
+        footer {
+            background: var(--primary);
+            color: var(--light);
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
     </style>
 </head>
 <body>
@@ -78,16 +84,17 @@
                 <h1>SMART GRID <span>CONTROL SYSTEM</span></h1>
             </div>
             <div class="container-text-center">
-    
-            {% block header_content %}{% endblock %}
-            
+                {% block header_content %}{% endblock %}
+            </div>
         </div>
-       
-          
     </header>
 
     <main>
         {% block content %}{% endblock %}
     </main>
+
+    <footer>
+        <p>© 2025 Smart Grid Control System. All rights reserved.</p>
+    </footer>
 </body>
 </html>
